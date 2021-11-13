@@ -145,6 +145,8 @@
 - Lalu restart dengan `service isc-dhcp-server restart`
 
 #### 5. Client mendapatkan DNS dari EniesLobby dan client dapat terhubung dengan internet melalui DNS tersebut.
+- Lakukan konfigurasi file `/etc/bind/named.conf.options` seperti berikut:
+  ![img3](https://i.postimg.cc/02yh6stX/image.png)<br/>
 
 #### 6. Lama waktu DHCP server meminjamkan alamat IP kepada Client yang melalui Switch1 selama 6 menit sedangkan pada client yang melalui Switch3 selama 12 menit. Dengan waktu maksimal yang dialokasikan untuk peminjaman alamat IP selama 120 menit.
 Pada Jipangu edit file konfigurasi `/etc/dhcp/dhcpd.conf`:
@@ -152,6 +154,37 @@ Pada Jipangu edit file konfigurasi `/etc/dhcp/dhcpd.conf`:
 - Edit `max-lease-time` menjadi `7200`
 
 #### 7. Luffy dan Zoro berencana menjadikan Skypie sebagai server untuk jual beli kapal yang dimilikinya dengan alamat IP yang tetap dengan IP [prefix IP].3.69
+- Pada Jipangu edit file `/etc/dhcp/dhcpd.conf` seperti berikut:
+  ```
+  subnet 10.0.2.0 netmask 255.255.255.0 {
+        option routers 10.0.2.1;
+  }
+
+  subnet 10.0.1.0 netmask 255.255.255.0 {
+        range 10.0.1.20 10.0.1.99;
+        range 10.0.1.150 10.0.1.169;
+        option routers 10.0.1.1;
+        option broadcast-address 10.0.1.255;
+        option domain-name-servers 10.0.2.2;
+        default-lease-time 360;
+        max-lease-time 7200;
+  }
+  
+  subnet 10.0.3.0 netmask 255.255.255.0 {
+        range 10.0.3.30 10.0.3.50;
+        option routers 10.0.3.1;
+        option broadcast-address 10.0.3.255;
+        option domain-name-servers 10.0.2.2;
+        default-lease-time 720;
+        max-lease-time 7200;
+  }
+  
+  host Skypie {
+    hardware ethernet e2:a9:e4:73:f8:9c;
+    fixed-address 10.0.3.69;
+  }
+  ```
+- Lalu restart dengan `service isc-dhcp-server restart`
 
 #### 8. Pada Loguetown, proxy harus bisa diakses dengan nama jualbelikapal.yyy.com dengan port yang digunakan adalah 5000
 - Lakukan pengaturan pada `/etc/squid/squid.conf` seperti berikut:
