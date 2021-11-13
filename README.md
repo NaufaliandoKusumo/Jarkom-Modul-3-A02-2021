@@ -3,6 +3,7 @@
 ## Nama Kelompok A02:
 - Naufaliando Kusuma -
 - Kevin Davi Samuel - 05111940000157
+- Muhamad Affan - 05111840000109
 
 #### 1. Luffy bersama Zoro berencana membuat peta tersebut dengan kriteria EniesLobby sebagai DNS Server, Jipangu sebagai DHCP Server, Water7 sebagai Proxy Server
 - Membuat topologi seperti berikut:
