@@ -140,6 +140,26 @@
 - Lalu restart dengan `service isc-dhcp-server restart`
 
 #### 5. Client mendapatkan DNS dari EniesLobby dan client dapat terhubung dengan internet melalui DNS tersebut.
+### Pada Skypie 
+- Edit file `/etc/network/interfaces` seperti berikut 
+- ![image](https://user-images.githubusercontent.com/81247727/140744476-6cffaa56-6085-4afc-b4e6-baf1247219e5.png)
+- Cek nameserver dengan `cat /etc/resolv.conf`
+- ![image](https://user-images.githubusercontent.com/81247727/140744581-3505468c-99c9-4295-8941-b12f94387c27.png)
+### Pada Tottoland 
+- Edit file `/etc/network/interfaces` seperti berikut 
+- ![image](https://user-images.githubusercontent.com/81247727/140744766-3d38431e-c8b3-4f15-87d4-911d70a29372.png)
+- Cek nameserver dengan `cat /etc/resolv.conf`
+- ![image](https://user-images.githubusercontent.com/81247727/140744802-3d680f47-6ed7-45e2-a3f4-e3fc438a771c.png)
+### Pada Loguetown 
+- Edit file `/etc/network/interfaces` seperti berikut 
+- ![image](https://user-images.githubusercontent.com/81247727/140744870-6f033acf-d311-469b-81d2-6f74bcb6e75a.png)
+- Cek nameserver dengan `cat /etc/resolv.conf`
+- ![image](https://user-images.githubusercontent.com/81247727/140744895-4bc9c62a-3ce3-4b94-b698-2bc07e309b98.png)
+### Pada Alabasta 
+- Edit file `/etc/network/interfaces` seperti berikut 
+- ![image](https://user-images.githubusercontent.com/81247727/140744954-64585ee7-57a0-400a-aaa5-aff25835d52c.png)
+- Cek nameserver dengan `cat /etc/resolv.conf`
+- ![image](https://user-images.githubusercontent.com/81247727/140744980-b49df64c-b2ee-458f-bc56-4dedbdc9f7ab.png)
 
 #### 6. Lama waktu DHCP server meminjamkan alamat IP kepada Client yang melalui Switch1 selama 6 menit sedangkan pada client yang melalui Switch3 selama 12 menit. Dengan waktu maksimal yang dialokasikan untuk peminjaman alamat IP selama 120 menit.
 Pada Jipangu edit file konfigurasi `/etc/dhcp/dhcpd.conf`:
@@ -149,7 +169,35 @@ Pada Jipangu edit file konfigurasi `/etc/dhcp/dhcpd.conf`:
 #### 7. Luffy dan Zoro berencana menjadikan Skypie sebagai server untuk jual beli kapal yang dimilikinya dengan alamat IP yang tetap dengan IP [prefix IP].3.69
 
 #### 8. Pada Loguetown, proxy harus bisa diakses dengan nama jualbelikapal.yyy.com dengan port yang digunakan adalah 5000
+- Lakukan pengaturan pada `/etc/squid/squid.conf` seperti berikut:
+```
+include /etc/squid/acl.conf
+http_port 5000
+visible_hostname jualbelikapal.a02.com
+auth_param basic program /usr/lib/squid/basic_ncsa_auth /etc/squid/passwd
+auth_param basic children 5
+auth_param basic realm Proxy
+auth_param basic credentialsttl 2 hours
+auth_param basic casesensitive on
+acl USERS proxy_auth REQUIRED
+http_access allow AVAILABLE_WORKING1 USERS
+http_access allow AVAILABLE_WORKING2 USERS
+http_access allow AVAILABLE_WORKING3 USERS
+http_access deny all
+```
 
 #### 9. Agar transaksi jual beli lebih aman dan pengguna website ada dua orang, proxy dipasang autentikasi user proxy dengan enkripsi MD5 dengan dua username, yaitu luffybelikapalyyy dengan password luffy_yyy dan zorobelikapalyyy dengan password zoro_yyy 
+- Untuk menambahkan user dan pass bisa menggunakan command
+```
+htpasswd -b -c /etc/squid/passwd lufffybelikapala02 luffy_a02
+htpasswd -b /etc/squid/passwd zorobelikapala02 zoro_a02
+```
 
 #### 10. Transaksi jual beli tidak dilakukan setiap hari, oleh karena itu akses internet dibatasi hanya dapat diakses setiap hari Senin-Kamis pukul 07.00-11.00 dan setiap hari Selasa-Jum’at pukul 17.00-03.00 keesokan harinya (sampai Sabtu pukul 03.00)
+- Pada `/etc/squid/acl.conf` diisi dengan:
+```
+acl AVAILABLE_WORKING time MTWH 07:00-11:00
+acl AVAILABLE_WORKING time TWHF 17:00-24:00
+acl AVAILABLE_WORKING time TWHF 00:00-03:00
+```
+
