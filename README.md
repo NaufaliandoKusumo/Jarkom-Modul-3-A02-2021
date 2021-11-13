@@ -1,7 +1,7 @@
 # Jarkom-Modul-3-A02-2021
 
 ## Nama Kelompok A02:
-- Naufaliando Kusuma -
+- Naufaliando Yudo Kusumo - 05111940000169
 - Kevin Davi Samuel - 05111940000157
 - Muhamad Affan - 05111840000109
 
